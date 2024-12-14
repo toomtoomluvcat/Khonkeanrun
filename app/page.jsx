@@ -14,7 +14,7 @@ function StudentForm() {
 
   const url =
     "https://script.google.com/macros/s/AKfycbyyNaI4HqvFmP-Zz13PfSoN_t88yJ3IO_03X0tfwbhqQgyX4ga0rICQp89lh1tGWvCeHQ/exec";
-  const options = [
+  const options = Object.freeze([
     {
       value: "1",
       label: "W1",
@@ -240,7 +240,7 @@ function StudentForm() {
       count: 14,
       participants: [people[24]?.register],
     },
-  ];
+  ]);
 
   useEffect(() => {
     fetchData();
@@ -267,14 +267,25 @@ function StudentForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!name || studentId.length<11 || !selectedFaculty || !selectedOption || !tel) {
-      seterror("โปรดกรอกข้อมูลให้ครับถ้วน");
-      return;
-    }
+
+     if (
+       !name ||
+       studentId.length < 11 ||
+       !selectedFaculty ||
+       !selectedOption ||
+       !tel
+     ) {
+       seterror("โปรดกรอกข้อมูลให้ครับถ้วน");
+       return;
+     }
     fetchData();
-    if (people[selectedOption+1]?.register >= selectedOption ){
-      seterror("จุดที่ท่านเลือกเต็มแล้ว กรุณาเลือกจุดใหม่")
+
+    if (
+      people[selectedOption-1]?.register >= options[selectedOption-1]?.count
+    ) {
+      seterror(
+        "จุดที่ท่านเลือกเต็มแล้ว กรุณาเลือกจุดใหม่"
+        );
       return;
     }
 
@@ -346,7 +357,6 @@ function StudentForm() {
             onChange={(e) => setName(e.target.value)}
             placeholder="กรอกชื่อ"
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            
           />
         </div>
         <div className="mb-4">
@@ -376,7 +386,6 @@ function StudentForm() {
             onChange={(e) => setTel(e.target.value)}
             placeholder="กรอกเบอร์โทรศัพท์"
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          
           />
         </div>
         <div className="mb-4 relative">
@@ -477,7 +486,7 @@ function StudentForm() {
         >
           {status ? "กำลังส่งข้อมูล" : "ยืนยันการสมัคร"}
         </button>
-        {error  && <p className="mt-[12px] text-red-500">{error}</p>}
+        {error && <p className="mt-[12px] text-red-500">{error}</p>}
       </form>
     </div>
   );
