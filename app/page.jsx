@@ -260,6 +260,7 @@ function StudentForm() {
 
       setPeople(post);
       setstatus(false);
+      return post;
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
@@ -267,15 +268,27 @@ function StudentForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!name || studentId.length < 11 || !selectedFaculty || !selectedOption || !tel) {
+
+    if (
+      !name ||
+      studentId.length < 11 ||
+      !selectedFaculty ||
+      !selectedOption ||
+      !tel
+    ) {
       seterror("โปรดกรอกข้อมูลให้ครบถ้วน");
       return;
     }
-  
+
+    const post = await fetchData();
+    setstatus(true);
+    if (
+      post[selectedOption - 1]?.register >= options[selectedOption - 1]?.count
+    ) {
+      seterror("จุดที่ท่านเลือกเต็มแล้ว กรุณาเลือกจุดใหม่");
+      return;
+    }
     try {
-      setstatus(true);
-  
       const body = {
         name,
         studentid: studentId,
@@ -283,22 +296,20 @@ function StudentForm() {
         location: selectedOption,
         faculty: selectedFaculty,
       };
-  
+
       const res = await fetch(url, {
         method: "POST",
         body: new URLSearchParams(body),
       });
-  
-      const result = await res.json();
-  
-      if (result.status === "success") {
+
+      if (res.ok) {
         setName("");
         setTel("");
+        fetchData();
         setStudentId("");
         alert("ยืนยันการสมัครเสร็จสิ้น");
-        fetchData(); // รีเฟรชข้อมูลผู้สมัคร
       } else {
-        seterror(result.message || "มีปัญหาการเชื่อมต่อโปรดติดต่อ admin");
+        seterror("มีปัญหาการเชื่อมต่อโปรดติดต่อ admin");
       }
     } catch (error) {
       seterror("เกิดข้อผิดพลาด: " + error.message);
@@ -306,7 +317,6 @@ function StudentForm() {
       setstatus(false);
     }
   };
-  
 
   const handleChange = (e) => {
     setSelectedOption(e.target.value);
