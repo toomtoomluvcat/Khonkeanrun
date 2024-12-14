@@ -268,24 +268,16 @@ function StudentForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-     if (
-       !name ||
-       studentId.length < 11 ||
-       !selectedFaculty ||
-       !selectedOption ||
-       !tel
-     ) {
-       seterror("โปรดกรอกข้อมูลให้ครับถ้วน");
-       return;
-     }
     fetchData();
-
     if (
-      people[selectedOption-1]?.register >= options[selectedOption-1]?.count
+      people[selectedOption - 1]?.register >= options[selectedOption - 1]?.count
     ) {
       seterror(
-        "จุดที่ท่านเลือกเต็มแล้ว กรุณาเลือกจุดใหม่"
-        );
+        "จุดที่ท่านเลือกเต็มแล้ว กรุณาเลือกจุดใหม่",
+        people[selectedOption - 1]?.register +
+          "อีกอัน" +
+          options[selectedOption - 1]?.count
+      );
       return;
     }
 
