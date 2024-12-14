@@ -13,7 +13,7 @@ function StudentForm() {
   const [error, seterror] = useState("");
 
   const url =
-    "https://script.google.com/macros/s/AKfycbyyNaI4HqvFmP-Zz13PfSoN_t88yJ3IO_03X0tfwbhqQgyX4ga0rICQp89lh1tGWvCeHQ/exec";
+    "https://script.google.com/macros/s/AKfycbyS3ZHlejKccCgp8pFeHsaA1-d7Ela0UnpKsAFYOy8_62xjRC_wIIqBpyh7uPJWDvqnqw/exec";
   const options = Object.freeze([
     {
       value: "1",
@@ -267,48 +267,46 @@ function StudentForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    fetchData();
-    if (
-      people[selectedOption - 1]?.register >= options[selectedOption - 1]?.count
-    ) {
-      seterror(
-        "จุดที่ท่านเลือกเต็มแล้ว กรุณาเลือกจุดใหม่",
-        people[selectedOption - 1]?.register +
-          "อีกอัน" +
-          options[selectedOption - 1]?.count
-      );
+  
+    if (!name || studentId.length < 11 || !selectedFaculty || !selectedOption || !tel) {
+      seterror("โปรดกรอกข้อมูลให้ครบถ้วน");
       return;
     }
-
+  
     try {
       setstatus(true);
-      let body = {
-        name: name,
+  
+      const body = {
+        name,
         studentid: studentId,
         tel: ":" + tel,
         location: selectedOption,
         faculty: selectedFaculty,
       };
-
+  
       const res = await fetch(url, {
         method: "POST",
         body: new URLSearchParams(body),
       });
-      if (res.ok) {
+  
+      const result = await res.json();
+  
+      if (result.status === "success") {
         setName("");
         setTel("");
         setStudentId("");
         alert("ยืนยันการสมัครเสร็จสิ้น");
+        fetchData(); // รีเฟรชข้อมูลผู้สมัคร
       } else {
-        alert("มีปัญหาการเชื่อมต่อโปรดติดต่อ admin");
+        seterror(result.message || "มีปัญหาการเชื่อมต่อโปรดติดต่อ admin");
       }
     } catch (error) {
-      console.log("error", error);
+      seterror("เกิดข้อผิดพลาด: " + error.message);
     } finally {
       setstatus(false);
     }
   };
+  
 
   const handleChange = (e) => {
     setSelectedOption(e.target.value);
