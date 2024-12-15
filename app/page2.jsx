@@ -247,7 +247,7 @@ function StudentForm() {
   }, []);
 
   const fetchData = async () => {
-    
+    setstatus(true);
     try {
       const res = await fetch(url, {
         method: "GET",
@@ -256,7 +256,7 @@ function StudentForm() {
       if (!res.ok) {
         throw new Error(`Error: ${res.statusText}`);
       }
-      setstatus(false);
+
       const post = await res.json();
 
       setPeople(post);
@@ -279,9 +279,9 @@ function StudentForm() {
       seterror("โปรดกรอกข้อมูลให้ครบถ้วน");
       return;
     }
-    setstatus(true);
+
     const post = await fetchData();
-    
+    setstatus(true);
     if (
       post[selectedOption - 1]?.register >= options[selectedOption - 1]?.count
     ) {
@@ -305,17 +305,16 @@ function StudentForm() {
       if (res.ok) {
         setName("");
         setTel("");
+        fetchData();
         setStudentId("");
-        
+        alert("ยืนยันการสมัครเสร็จสิ้น");
       } else {
         seterror("มีปัญหาการเชื่อมต่อโปรดติดต่อ admin");
       }
     } catch (error) {
       seterror("เกิดข้อผิดพลาด: " + error.message);
     } finally {
-      alert("ยืนยันการสมัครเสร็จสิ้น");
       setstatus(false);
-      
     }
   };
 
