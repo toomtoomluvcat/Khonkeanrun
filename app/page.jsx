@@ -360,7 +360,6 @@ function StudentForm() {
         width={382}
         height={463}
       ></Image>
-      
 
       <div className="z-5 relative mx-auto my-[100px] p-6 rounded-lg max-w-[650px]">
         <h2 className="text-[30px] sm:text-[34px] font-normal text-center mb-2">
@@ -528,13 +527,19 @@ function StudentForm() {
                         <h2>{option.label}</h2>
                         <h2>{option.location}</h2>
                       </div>
-                      <div className="text-[0.68rem] sm:text-[1rem] flex sm:flex-row flex-col text-gray-500 mt">
+                      <div className="text-[0.68rem] sm:text-[0.85rem] mt-[2px] flex sm:flex-row flex-col gap-[5px] text-gray-500 mt">
                         {option.work && <p>หน้าที่: {option.work}</p>}
                         <p>
-                          ค่าตอบแทน:<br></br> {option.salary} บาท
+                          ค่าตอบแทน: 
+                          <span className="block ml-[2px] sm:inline">
+                            {option.salary} บาท
+                          </span>
                         </p>
                         <p>
-                          ช่วงเวลา: <br></br> {option.time}
+                          ค่าตอบแทน: 
+                          <span className="block ml-[2px]  sm:inline">
+                            {option.time} บาท
+                          </span>
                         </p>
                       </div>
                     </label>
@@ -561,19 +566,19 @@ function StudentForm() {
       </div>
       <footer className=" relative text-center mt-[45px] text-black border-t mx-auto border-gray-300">
         <div className="z-20 relative">
-        <p className="text-[12px] sm:text-[13px] mt-6">
-          This website was created by{" "}
-          <a
-            href="https://github.com/toomtoomluvcat"
-            target="_blank"
-            className="hover:text-[#CF5E4A] transition duration-200 underline"
-          >
-            Toomluvcat
-          </a>
-        </p>
-        <p className="mt-2 pb-8 text-[10px] sm:text-[10px]">
-          Developed using Google script React and Next.js (v13.5).
-        </p>
+          <p className="text-[12px] sm:text-[13px] mt-6">
+            This website was created by{" "}
+            <a
+              href="https://github.com/toomtoomluvcat"
+              target="_blank"
+              className="hover:text-[#CF5E4A] transition duration-200 underline"
+            >
+              Toomluvcat
+            </a>
+          </p>
+          <p className="mt-2 pb-8 text-[10px] sm:text-[10px]">
+            Developed using Google script React and Next.js (v13.5).
+          </p>
         </div>
         <Image
           alt="background1"
@@ -583,7 +588,6 @@ function StudentForm() {
           height={1173}
         />
       </footer>
-      
     </div>
   );
 }
