@@ -247,6 +247,7 @@ function StudentForm() {
   }, []);
 
   const fetchData = async () => {
+    setstatus(true);
     try {
       const res = await fetch(url, {
         method: "GET",
@@ -259,7 +260,6 @@ function StudentForm() {
       const post = await res.json();
 
       setPeople(post);
-      setstatus(false);
       return post;
     } catch (error) {
       console.error("Error fetching data:", error.message);
