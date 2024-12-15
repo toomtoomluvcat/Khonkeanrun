@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 function StudentForm() {
   const [name, setName] = useState("");
   const [studentId, setStudentId] = useState("");
@@ -247,7 +248,6 @@ function StudentForm() {
   }, []);
 
   const fetchData = async () => {
-    
     try {
       const res = await fetch(url, {
         method: "GET",
@@ -256,9 +256,9 @@ function StudentForm() {
       if (!res.ok) {
         throw new Error(`Error: ${res.statusText}`);
       }
-      setstatus(false);
-      const post = await res.json();
 
+      const post = await res.json();
+      setstatus(false);
       setPeople(post);
       return post;
     } catch (error) {
@@ -279,9 +279,9 @@ function StudentForm() {
       seterror("โปรดกรอกข้อมูลให้ครบถ้วน");
       return;
     }
-    setstatus(true);
+
     const post = await fetchData();
-    
+    setstatus(true);
     if (
       post[selectedOption - 1]?.register >= options[selectedOption - 1]?.count
     ) {
@@ -305,17 +305,16 @@ function StudentForm() {
       if (res.ok) {
         setName("");
         setTel("");
+        fetchData();
         setStudentId("");
-        
+        alert("ยืนยันการสมัครเสร็จสิ้น");
       } else {
         seterror("มีปัญหาการเชื่อมต่อโปรดติดต่อ admin");
       }
     } catch (error) {
       seterror("เกิดข้อผิดพลาด: " + error.message);
     } finally {
-      alert("ยืนยันการสมัครเสร็จสิ้น");
       setstatus(false);
-      
     }
   };
 
@@ -339,156 +338,252 @@ function StudentForm() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-center mb-6">
-        ระบบ รับสมัครนักศึกษาช่วยงานขอนแก่นมาราธอน ฝ่ายบริการน้ำนักวิ่ง 2025
-      </h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label
-            htmlFor="name"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            ชื่อ:
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="กรอกชื่อ"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="studentId"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            รหัสนักศึกษา: (ตัวอย่าง 66123456-7)
-          </label>
-          <input
-            type="text"
-            id="studentId"
-            value={studentId}
-            onChange={handleInputChange}
-            placeholder="กรอกรหัสนักศึกษา"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="tel" className="block text-gray-700 font-medium mb-2">
-            เบอร์โทรศัพท์:
-          </label>
-          <input
-            type="text"
-            id="tel"
-            value={tel}
-            onChange={(e) => setTel(e.target.value)}
-            placeholder="กรอกเบอร์โทรศัพท์"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="mb-4 relative">
-          <button
-            type="button"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="w-full p-3 text-left border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-between items-center"
-          >
-            {selectedFaculty || "เลือกคณะ"}
-            <svg
-              className="w-4 h-4 ml-2"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 10 6"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 1 4 4 4-4"
-              />
-            </svg>
-          </button>
-          {dropdownOpen && (
-            <div className="absolute left-0 w-full mt-2 bg-white shadow-lg rounded-lg">
-              <ul className="p-3 text-sm text-gray-700">
-                {[
-                  "คณะเกษตรศาสตร์",
-                  "คณะเทคโนโลยี",
-                  "คณะวิศวกรรมศาสตร์",
-                  "คณะวิทยาศาสตร์",
-                  "คณะสถาปัตยกรรมศาสตร์",
-                  "คณะพยาบาลศาสตร์",
-                  "คณะแพทย์ศาสตร์",
-                  "คณะเทคนิคการแพทย์",
-                  "คณะสาธารณะสุขศาสตร์",
-                  "คณะทันตแพทย์ศาสตร์",
-                  "คณะศึกษาศาสตร์",
-                  "คณะมนุษย์ศาสตร์และสังคมศาสตร์",
-                  "คณะบริหารธุรกิจและการบัญชี",
-                  "คณะศิลปกรรมศาสตร์",
-                  "คณะเศรษฐศาสตร์",
-                  "วิทยาลัยนานาชาติ",
-                  "คณะนิติศาสตร์",
-                  "วิทยาลัยการปกครองท้องถิ่น",
-                  "วิทยาลัยการคอมพิวเตอร์",
-                ].map((faculty, index) => (
-                  <li key={index}>
-                    <button
-                      type="button"
-                      className="w-full text-left p-2 hover:bg-gray-100"
-                      onClick={() => {
-                        setSelectedFaculty(faculty);
-                        setDropdownOpen(false);
-                      }}
-                    >
-                      {faculty}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3">เลือกจุดที่รับ</h3>
-          {options.map((option) => (
-            <div key={option.value} className="mb-4">
-              <input
-                disabled={option.participants >= option.count}
-                type="radio"
-                id={option.value}
-                name="workOption"
-                value={option.value}
-                checked={selectedOption === option.value}
-                onChange={handleChange}
-                className="mr-2"
-              />
-              <label htmlFor={option.value}>{option.label}</label>
+    <div>
+      <Image
+        alt="background1"
+        className="absolute top-0 right-0 w-[100px] md:w-[300px]"
+        src="/img/bg-top-right1.png"
+        width={300}
+        height={450}
+      ></Image>
+      <Image
+        alt="background1"
+        className="absolute top-[800px] left-0 w-[45px]  md:w-[122px]"
+        src="/img/bg-center-right1.png"
+        width={382}
+        height={463}
+      ></Image>
+      <Image
+        alt="background1"
+        className="absolute top-[2200px] right-0 w-[45px]  md:w-[92px]"
+        src="/img/bg-buttom-right1.png"
+        width={382}
+        height={463}
+      ></Image>
+      
 
-              <div className="text-sm text-gray-500 mt-2">
-                {option.work && <p>หน้าที่: {option.work}</p>}
-                <p>จุดที่รับ: {option.location}</p>
-                <p>
-                  จำนวนผู้รับ: {option.participants}/ {option.count} คน
-                </p>
-                <p>ค่าตอบแทน: {option.salary} บาท</p>
-                <p>ช่วงเวลาที่ทำงาน: {option.time}</p>
+      <div className="z-5 relative mx-auto my-[100px] p-6 rounded-lg max-w-[650px]">
+        <h2 className="text-[30px] sm:text-[34px] font-normal text-center mb-2">
+          รับสมัครนักศึกษาช่วยงาน
+        </h2>
+        <p className="text-center text-[14px] sm:text-[17px] font-normal mx-auto max-w-[420px] text-[#545454] mb-12">
+          แบบฟอร์มรับสมัครนักศึกษาช่วยฝ่ายบริการน้ำนักวิ่งในงาน KHONKEAN
+          MARATHON 2025 ในวันที่ 12 มกราคม 2025
+        </p>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-6">
+            <label
+              htmlFor="name"
+              className="block text-[19px] font-normal mb-2"
+            >
+              <span className="text-[#545454]">ชื่อ</span>
+              <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full p-3 bg-[#F0F0F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="mb-6">
+            <label
+              htmlFor="studentId"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              <span className="text-[#545454]">รหัสนักศึกษา</span>
+              <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="studentId"
+              value={studentId}
+              onChange={handleInputChange}
+              className="w-full p-3  bg-[#F0F0F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="mb-10">
+            <label
+              htmlFor="tel"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              <span className="text-[#545454]">เบอร์โทรศัพท์</span>
+              <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="tel"
+              value={tel}
+              onChange={(e) => setTel(e.target.value)}
+              className="w-full p-3  bg-[#F0F0F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="z-10 relative translate-x-[25px] translate-y-[12px] max-w-[120px] bg-white px-[12px] text-center text-[#545454]">
+            <p>คณะ/วิทยาลัย</p>
+          </div>
+          <div className="mb-16 relative">
+            <button
+              type="button"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="w-full py-[15px] px-[15px] text-left border border-[#545454] border-[2px] rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-between items-center"
+            >
+              {" "}
+              <div className="flex items-center gap-x-[20px] text-[#545454]">
+                {" "}
+                <Image
+                  className="w-[20px] h-[16px]"
+                  src="/img/Faculty.png"
+                  width={20}
+                  height={20}
+                  alt="faculty"
+                ></Image>
+                {selectedFaculty || "--- ยังไม่ได้เลือก ---"}
               </div>
-            </div>
-          ))}
+              <svg
+                className="w-4 h-4 ml-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 10 6"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 4 4 4-4"
+                />
+              </svg>
+            </button>
+            {dropdownOpen && (
+              <div className="absolute left-0 w-full mt-2 bg-white shadow-lg rounded-lg">
+                <ul className="p-3 text-sm text-gray-700">
+                  {[
+                    "คณะเกษตรศาสตร์",
+                    "คณะเทคโนโลยี",
+                    "คณะวิศวกรรมศาสตร์",
+                    "คณะวิทยาศาสตร์",
+                    "คณะสถาปัตยกรรมศาสตร์",
+                    "คณะพยาบาลศาสตร์",
+                    "คณะแพทย์ศาสตร์",
+                    "คณะเทคนิคการแพทย์",
+                    "คณะสาธารณะสุขศาสตร์",
+                    "คณะทันตแพทย์ศาสตร์",
+                    "คณะศึกษาศาสตร์",
+                    "คณะมนุษย์ศาสตร์และสังคมศาสตร์",
+                    "คณะบริหารธุรกิจและการบัญชี",
+                    "คณะศิลปกรรมศาสตร์",
+                    "คณะเศรษฐศาสตร์",
+                    "วิทยาลัยนานาชาติ",
+                    "คณะนิติศาสตร์",
+                    "วิทยาลัยการปกครองท้องถิ่น",
+                    "วิทยาลัยการคอมพิวเตอร์",
+                  ].map((faculty, index) => (
+                    <li key={index}>
+                      <button
+                        type="button"
+                        className="w-full text-left p-2 hover:bg-gray-100"
+                        onClick={() => {
+                          setSelectedFaculty(faculty);
+                          setDropdownOpen(false);
+                        }}
+                      >
+                        {faculty}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          <div className="mb-6">
+            <h3 className=" font-normal text-center text-[25px] mb-6">
+              เลือกจุดที่สมัคร
+            </h3>
+            <div className="max-w-[540px] h-[2px] bg-black mx-auto mb-8"></div>
+            {options.map((option) => (
+              <div
+                key={option.value}
+                className={
+                  option.value % 2 != 0
+                    ? "mb-8 py-[18px] px-[25px] flex justify-between items-center bg-[#F0F0F0]"
+                    : " py-[18px] px-[25px] flex justify-between items-center  mb-8"
+                }
+              >
+                <div>
+                  <div className="flex gap-y-[12px]">
+                    <input
+                      disabled={option.participants >= option.count}
+                      type="radio"
+                      id={option.value}
+                      name="workOption"
+                      value={option.value}
+                      checked={selectedOption === option.value}
+                      onChange={handleChange}
+                      className="mr-3"
+                    />
+
+                    <label htmlFor={option.value} className="flex flex-col">
+                      <div className="flex gap-x-[10px] text-[14px] sm:text-[20px]">
+                        <h2>{option.label}</h2>
+                        <h2>{option.location}</h2>
+                      </div>
+                      <div className="text-[0.68rem] sm:text-[1rem] flex sm:flex-row flex-col text-gray-500 mt">
+                        {option.work && <p>หน้าที่: {option.work}</p>}
+                        <p>
+                          ค่าตอบแทน:<br></br> {option.salary} บาท
+                        </p>
+                        <p>
+                          ช่วงเวลา: <br></br> {option.time}
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div className="min-w-[50px] max-w-[70px]">
+                  {" "}
+                  <p className="text-[0.8rem] sm:text-[1rem] text-center">
+                    จำนวนผู้รับ {option.participants}/ {option.count} คน
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button
+            disabled={status}
+            type="submit"
+            className="w-full bg-[#F06F58] text-white p-3 rounded-lg hover:bg-[#CF5E4A] transition duration-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            {status ? "กำลังส่งข้อมูล" : "ยืนยันการสมัคร"}
+          </button>
+          {error && <p className="mt-[12px] text-red-500">{error}</p>}
+        </form>
+      </div>
+      <footer className=" relative text-center mt-[45px] text-black border-t mx-auto border-gray-300">
+        <div className="z-20 relative">
+        <p className="text-[12px] sm:text-[13px] mt-6">
+          This website was created by{" "}
+          <a
+            href="https://github.com/toomtoomluvcat"
+            target="_blank"
+            className="hover:text-[#CF5E4A] transition duration-200 underline"
+          >
+            Toomluvcat
+          </a>
+        </p>
+        <p className="mt-2 pb-8 text-[10px] sm:text-[10px]">
+          Developed using Google script React and Next.js (v13.5).
+        </p>
         </div>
-        <button
-          disabled={status}
-          type="submit"
-          className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          {status ? "กำลังส่งข้อมูล" : "ยืนยันการสมัคร"}
-        </button>
-        {error && <p className="mt-[12px] text-red-500">{error}</p>}
-      </form>
+        <Image
+          alt="background1"
+          className="absolute z-0 bottom-0 right-0 bottom-0 left-0 w-[200px] sm:[250px] xl:w-[500px]"
+          src="/img/bg-buttom-right2.png"
+          width={1319}
+          height={1173}
+        />
+      </footer>
+      
     </div>
   );
 }
