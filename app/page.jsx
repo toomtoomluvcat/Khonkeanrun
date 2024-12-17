@@ -532,7 +532,7 @@ function StudentForm() {
                         <p>
                           ค่าตอบแทน: 
                           <span className="block ml-[2px] sm:inline">
-                            {option.salary} บาท
+                            {option.salary}
                           </span>
                         </p>
                         <p>
